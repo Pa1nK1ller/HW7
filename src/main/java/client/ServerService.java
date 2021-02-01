@@ -9,5 +9,4 @@ public interface ServerService {
 
     void sendMessage(String message);
     Message readMessages();
-
 }

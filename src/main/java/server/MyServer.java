@@ -31,7 +31,6 @@ public class MyServer {
                 authService.stop();
             }
         }
-
     }
 
     public synchronized void privateMessage(ClientHandler from, String nickTo, String msg) {

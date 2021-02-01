@@ -5,13 +5,14 @@ import java.util.List;
 
 public class BaseAuthService implements AuthService {
 
-    private List<Entry> entries;;
+    private List<Entry> entries;
+    ;
 
-    public BaseAuthService(){
+    public BaseAuthService() {
         entries = new ArrayList<>();
-        entries.add(new Entry("Ivan","password","Neivanov"));
-        entries.add(new Entry("sharik","gav","Auf"));
-        entries.add(new Entry("otvertka","shurup","Kruchu-Verchu"));
+        entries.add(new Entry("Ivan", "password", "Neivanov"));
+        entries.add(new Entry("sharik", "gav", "Auf"));
+        entries.add(new Entry("otvertka", "shurup", "Kruchu-Verchu"));
 
     }
 
@@ -42,9 +43,8 @@ public class BaseAuthService implements AuthService {
     @Override
     public String getNickByLoginAndPass(String login, String password) {
 
-        for (Entry entry:entries) {
-            if (login.equals(entry.login)&&password.equals(entry.password))
-            {
+        for (Entry entry : entries) {
+            if (login.equals(entry.login) && password.equals(entry.password)) {
                 return entry.nick;
             }
         }

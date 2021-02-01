@@ -78,6 +78,5 @@ public class SocketServerService implements ServerService {
             e.printStackTrace();
             return new Message();
         }
-
     }
 }

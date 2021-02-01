@@ -99,11 +99,10 @@ public class ClientHandler {
                     }
                     String nick = tokens[1];
                     String msg = tokens[2];
-                    myServer.privateMessage(this,nick,msg);
+                    myServer.privateMessage(this, nick, msg);
                     break;
                 }
             }
-
         }
     }
 

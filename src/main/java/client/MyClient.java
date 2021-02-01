@@ -51,14 +51,12 @@ public class MyClient extends JFrame {
         add(mainChat);
         add(send);
         add(myMessage);
-
     }
 
     private void sendMessage(TextArea mainChat, TextArea myMessage) {
 
         serverService.sendMessage(myMessage.getText());
         myMessage.setText("");
-
     }
 
     private void printToUi(TextArea mainChat, Message message){
