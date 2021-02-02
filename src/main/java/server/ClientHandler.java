@@ -13,8 +13,6 @@ public class ClientHandler {
     private MyServer myServer;
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
-
-
     private String nick;
 
     public ClientHandler(MyServer myServer, Socket socket) {
@@ -62,6 +60,8 @@ public class ClientHandler {
                 String nick = myServer.getAuthService().getNickByLoginAndPass(message.getLogin(), message.getPassword());
                 if (nick != null && !myServer.isNickBusy(nick)) {
                     message.setAuthenticated(true);
+                    message.setNick(nick);
+                    this.nick = nick;
                     dataOutputStream.writeUTF(new Gson().toJson(message));
                     Message broadcastMsg = new Message();
                     broadcastMsg.setMessage(nick + " вошел в чат");
@@ -88,13 +88,13 @@ public class ClientHandler {
             }
             String[] tokens = message.getMessage().split("\\s");
             switch (tokens[0]) {
-                case "/end": {
+                case "/end":{
                     return;
                 }
-                case "/w": {
+                case "/w":{// /w <nick> <message>
                     if (tokens.length < 3) {
                         Message msg = new Message();
-                        msg.setMessage("команда не соответствует виду : /w <Ник> <сообщение>");
+                        msg.setMessage("Не хватает параметров, необходимо отправить команду следующего вида: /w <ник> <сообщение>");
                         this.sendMessage(msg);
                     }
                     String nick = tokens[1];

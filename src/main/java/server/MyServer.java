@@ -33,6 +33,16 @@ public class MyServer {
         }
     }
 
+    public synchronized void broadcastClientsList() {
+        StringBuilder sb = new StringBuilder("/clients ");
+        for (ClientHandler client : clients) {
+            sb.append(client.getNick()).append(" ");
+        }
+        Message message = new Message();
+        message.setMessage(sb.toString());
+        broadcastMessage(message);
+    }
+
     public synchronized void privateMessage(ClientHandler from, String nickTo, String msg) {
         for (ClientHandler client : clients) {
             if (client.getNick().equals(nickTo)){
@@ -69,10 +79,12 @@ public class MyServer {
 
     public synchronized void subscribe(ClientHandler clientHandler) {
         clients.add(clientHandler);
+        broadcastClientsList();
     }
 
     public synchronized void unsubscribe(ClientHandler clientHandler) {
         clients.remove(clientHandler);
+        broadcastClientsList();
     }
 
 }

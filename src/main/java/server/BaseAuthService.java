@@ -10,7 +10,7 @@ public class BaseAuthService implements AuthService {
 
     public BaseAuthService() {
         entries = new ArrayList<>();
-        entries.add(new Entry("Ivan", "password", "Neivanov"));
+        entries.add(new Entry("ivan", "password", "Neivanov"));
         entries.add(new Entry("sharik", "gav", "Auf"));
         entries.add(new Entry("otvertka", "shurup", "Kruchu-Verchu"));
 
