@@ -16,15 +16,9 @@ public class SocketServerService implements ServerService {
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
     private boolean isConnected = false;
-    private final String login = "Ivan";
-    private final String password = "password";
 
     public boolean isConnected() {
         return isConnected;
-    }
-
-    public void setConnected(boolean connected) {
-        isConnected = connected;
     }
 
     @Override
@@ -33,19 +27,22 @@ public class SocketServerService implements ServerService {
             socket = new Socket("localhost", MyServer.PORT);
             dataInputStream = new DataInputStream(socket.getInputStream());
             dataOutputStream = new DataOutputStream(socket.getOutputStream());
-
-            AuthMessage authMessage = new AuthMessage();
-            authMessage.setLogin(login);
-            authMessage.setPassword(password);
-            dataOutputStream.writeUTF(new Gson().toJson(authMessage));
-
-            authMessage = new Gson().fromJson(dataInputStream.readUTF(), AuthMessage.class);
-            if (authMessage.isAuthenticated()) {
-                isConnected = true;
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String authorization(String login, String password) throws IOException {
+        AuthMessage authMessage = new AuthMessage();
+        authMessage.setLogin(login);
+        authMessage.setPassword(password);
+        dataOutputStream.writeUTF(new Gson().toJson(authMessage));
+
+        authMessage = new Gson().fromJson(dataInputStream.readUTF(), AuthMessage.class);
+        if (authMessage.isAuthenticated()) {
+            isConnected = true;
+        }
+        return authMessage.getNick();
     }
 
     @Override
@@ -58,6 +55,7 @@ public class SocketServerService implements ServerService {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public void sendMessage(String message) {
@@ -73,11 +71,10 @@ public class SocketServerService implements ServerService {
     @Override
     public Message readMessages() {
         try {
-            return new Gson().fromJson(dataInputStream.readUTF(),Message.class);
+            return new Gson().fromJson(dataInputStream.readUTF(), Message.class);
         } catch (IOException e) {
             e.printStackTrace();
             return new Message();
         }
-
     }
 }
