@@ -7,8 +7,8 @@ import java.io.IOException;
 public interface ServerService {
 
     boolean isConnected();
-    void openConnection();
-    void closeConnection();
+    void openConnection() ;
+    public void closeConnection();
     String authorization(String login, String password) throws IOException;
 
 

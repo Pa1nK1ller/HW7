@@ -6,21 +6,17 @@ import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.net.Socket;
-import java.net.SocketException;
 
 public class MyClient extends JFrame {
 
+
+    private static boolean authorization = false;
     private ServerService serverService;
+
 
     public MyClient() {
         super("Чат");
-        Socket socket = new Socket();
-        try {
-            socket.setSoTimeout(10);
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
+
         serverService = new SocketServerService();
         serverService.openConnection();
         JPanel jPanel = new JPanel();
@@ -48,7 +44,9 @@ public class MyClient extends JFrame {
         if (serverService.isConnected()) {
             new Thread(() -> {
                 while (true) {
-                    printToUi(mainChat, serverService.readMessages());
+
+                     printToUi(mainChat, serverService.readMessages());
+
                 }
             }).start();
         }
@@ -83,6 +81,7 @@ public class MyClient extends JFrame {
                         printToUi(mainChat, serverService.readMessages());
                     }
                 }).start();
+                authorization = true;
             }
         });
 
@@ -103,4 +102,9 @@ public class MyClient extends JFrame {
         mainChat.append("\n");
         mainChat.append((message.getNick() != null ? message.getNick() : "Сервер") + " написал: " + message.getMessage());
     }
+
+    public static boolean isAuthorization() {
+        return authorization;
+    }
+
 }

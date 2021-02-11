@@ -6,6 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 public class ClientHandler {
 
@@ -88,10 +89,11 @@ public class ClientHandler {
             }
             String[] tokens = message.getMessage().split("\\s");
             switch (tokens[0]) {
-                case "/end":{
+                case "/end": {
+                    closeConnection();
                     return;
                 }
-                case "/w":{// /w <nick> <message>
+                case "/w": {// /w <nick> <message>
                     if (tokens.length < 3) {
                         Message msg = new Message();
                         msg.setMessage("Не хватает параметров, необходимо отправить команду следующего вида: /w <ник> <сообщение>");

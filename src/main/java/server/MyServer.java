@@ -45,7 +45,7 @@ public class MyServer {
 
     public synchronized void privateMessage(ClientHandler from, String nickTo, String msg) {
         for (ClientHandler client : clients) {
-            if (client.getNick().equals(nickTo)){
+            if (client.getNick().equals(nickTo)) {
                 Message message = new Message();
                 message.setNick(from.getNick());
                 message.setMessage(msg);

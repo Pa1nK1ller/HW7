@@ -9,6 +9,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 public class SocketServerService implements ServerService {
 
@@ -25,12 +26,26 @@ public class SocketServerService implements ServerService {
     public void openConnection() {
         try {
             socket = new Socket("localhost", MyServer.PORT);
+//            socket.setSoTimeout(10000);
             dataInputStream = new DataInputStream(socket.getInputStream());
             dataOutputStream = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                if (e instanceof SocketTimeoutException) {
+                    throw new SocketTimeoutException();
+
+                } else {
+                    e.printStackTrace();
+                }
+            } catch (SocketTimeoutException socketTimeoutException) {
+                socketTimeoutException.printStackTrace();
+
+            }
         }
+
     }
+
+
 
     public String authorization(String login, String password) throws IOException {
         AuthMessage authMessage = new AuthMessage();

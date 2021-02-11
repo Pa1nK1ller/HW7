@@ -29,6 +29,13 @@
             <artifactId>javafx-archetype-fxml</artifactId>
             <version>0.0.5</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.23</version>
+        </dependency>
+
     </dependencies>
 
 
