@@ -67,7 +67,7 @@ public class MyClient extends JFrame {
 
         JLabel authLabel = new JLabel("Offline");
         authButton.addActionListener(actionEvent -> {
-            String lgn = login.getText();
+            String lgn = new String(login.getText());
             String psw = new String(password.getPassword());
             if (lgn != null && psw != null && !lgn.isEmpty() && !psw.isEmpty()) {
                 try {

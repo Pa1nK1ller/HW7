@@ -10,11 +10,11 @@ public class MyServer {
     public static final int PORT = 8081;
 
     private List<ClientHandler> clients;
-    private AuthService authService;
+    private AuthService authService = new DBAuthService();
 
     public MyServer() {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-            authService = new BaseAuthService();
+            DataBase.connect();
             authService.start();
             clients = new ArrayList<>();
             while (true) {
@@ -27,6 +27,7 @@ public class MyServer {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            DataBase.disconnect();
             if (authService != null) {
                 authService.stop();
             }

@@ -6,7 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
+import java.net.SocketException;
 
 public class ClientHandler {
 
@@ -71,6 +71,9 @@ public class ClientHandler {
                     this.nick = nick;
                     return;
                 }
+            } catch (SocketException e)
+            {
+                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -89,11 +92,11 @@ public class ClientHandler {
             }
             String[] tokens = message.getMessage().split("\\s");
             switch (tokens[0]) {
-                case "/end": {
+                case "/end" -> {
                     closeConnection();
                     return;
                 }
-                case "/w": {// /w <nick> <message>
+                case "/w" -> {// /w <nick> <message>
                     if (tokens.length < 3) {
                         Message msg = new Message();
                         msg.setMessage("Не хватает параметров, необходимо отправить команду следующего вида: /w <ник> <сообщение>");
@@ -102,7 +105,28 @@ public class ClientHandler {
                     String nick = tokens[1];
                     String msg = tokens[2];
                     myServer.privateMessage(this, nick, msg);
-                    break;
+
+                }
+                case "/changeNick" -> {//changeNick <nick> <newNick>
+
+                    if (tokens.length < 3) {
+                        Message msg = new Message();
+                        msg.setMessage("Невозможно сменить ник, Введите команду следующего вида /changeNick <ник> <новый ник>");
+                        this.sendMessage(msg);
+                        break;
+                    }
+                    if (myServer.getAuthService().changeNickname(this.nick, tokens[2])) {
+                        this.nick = tokens[2];
+                        Message msg = new Message();
+                        msg.setMessage("Ник изменен");
+                        this.sendMessage(msg);
+                        myServer.broadcastClientsList();
+                    } else {
+                        Message msg = new Message();
+                        msg.setMessage("Ник занят");
+                    }
+
+
                 }
             }
         }

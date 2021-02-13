@@ -5,4 +5,5 @@ public interface AuthService {
     void stop();
 
     String getNickByLoginAndPass(String login, String password);
-}
+    boolean changeNickname(String currentNickname, String newNickname);
+    }
