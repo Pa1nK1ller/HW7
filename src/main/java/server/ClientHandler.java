@@ -71,8 +71,7 @@ public class ClientHandler {
                     this.nick = nick;
                     return;
                 }
-            } catch (SocketException e)
-            {
+            } catch (SocketException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
