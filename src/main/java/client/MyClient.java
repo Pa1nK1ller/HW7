@@ -5,13 +5,17 @@ import server.Message;
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
+import java.io.*;
+
 
 public class MyClient extends JFrame {
 
 
     private static boolean authorization = false;
-    private ServerService serverService;
+    private final ServerService serverService;
+    private File messageHistoryFile;
+    private String lgn;
+    private String nick;
 
 
     public MyClient() {
@@ -45,7 +49,7 @@ public class MyClient extends JFrame {
             new Thread(() -> {
                 while (true) {
 
-                     printToUi(mainChat, serverService.readMessages());
+                    printToUi(mainChat, serverService.readMessages());
 
                 }
             }).start();
@@ -67,12 +71,14 @@ public class MyClient extends JFrame {
 
         JLabel authLabel = new JLabel("Offline");
         authButton.addActionListener(actionEvent -> {
-            String lgn = new String(login.getText());
+            lgn = login.getText();
             String psw = new String(password.getPassword());
             if (lgn != null && psw != null && !lgn.isEmpty() && !psw.isEmpty()) {
                 try {
-                    String nick = serverService.authorization(lgn, psw);
+                    nick = serverService.authorization(lgn, psw);
                     authLabel.setText("Online, nick " + nick);
+                    loadMessage(mainChat, lgn);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -92,19 +98,65 @@ public class MyClient extends JFrame {
 
     }
 
+    private void loadMessage(JTextArea mainChat, String lgn) throws IOException {
+        int lineNumber = 0;
+
+        if (setHistoryMessageFile(lgn).exists()) {
+            try (FileReader fr = new FileReader(messageHistoryFile)) {
+                LineNumberReader lnr = new LineNumberReader(fr);
+                while (lnr.readLine() != null) {
+                    lineNumber++;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try (BufferedReader br = new BufferedReader(new FileReader(messageHistoryFile))) {
+                for (int i = 0; i < lineNumber; i++) {
+                    String line = br.readLine();
+                    if (i >= lineNumber - 100) {
+                        mainChat.append(line + "\n");
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void sendMessage(JTextField myMessage) {
 
         serverService.sendMessage(myMessage.getText());
+
+        try (FileWriter fw = new FileWriter(messageHistoryFile, true)) {
+            {
+                fw.append(nick).append(": ").append(myMessage.getText()).append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         myMessage.setText("");
     }
 
     private void printToUi(JTextArea mainChat, Message message) {
         mainChat.append("\n");
         mainChat.append((message.getNick() != null ? message.getNick() : "Сервер") + " написал: " + message.getMessage());
+        try (FileWriter fw = new FileWriter(messageHistoryFile, true)) {
+            {
+                fw.append(message.getNick()).append(": ").append(message.getMessage()).append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static boolean isAuthorization() {
         return authorization;
+    }
+
+    private File setHistoryMessageFile(String lgn) {
+        messageHistoryFile = new File("G:\\Java\\HomeWork\\HWJava2\\HW7\\src\\main\\java\\client\\data\\history_" + lgn + ".txt");
+        return messageHistoryFile;
     }
 
 }
