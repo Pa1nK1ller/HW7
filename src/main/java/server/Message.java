@@ -3,7 +3,6 @@ package server;
 public class Message {
     private String nick;
     private String message;
-
     public String getNick() {
         return nick;
     }
