@@ -3,7 +3,16 @@ package server;
 public class AuthMessage {
     private String login;
     private String password;
+    private String nick;
     private boolean authenticated = false;
+
+    public String getNick() {
+        return nick;
+    }
+
+    public void setNick(String nick) {
+        this.nick = nick;
+    }
 
     public String getLogin() {
         return login;
