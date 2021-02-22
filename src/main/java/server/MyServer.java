@@ -5,14 +5,18 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MyServer {
     public static final int PORT = 8081;
 
     private List<ClientHandler> clients;
     private AuthService authService = new DBAuthService();
+    private ExecutorService executorService;
 
     public MyServer() {
+        executorService = Executors.newCachedThreadPool();
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             DataBase.connect();
             authService.start();
@@ -88,4 +92,7 @@ public class MyServer {
         broadcastClientsList();
     }
 
+    public ExecutorService getExecutorService() {
+        return executorService;
+    }
 }

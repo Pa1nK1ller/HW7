@@ -22,7 +22,7 @@ public class ClientHandler {
             this.socket = socket;
             this.dataInputStream = new DataInputStream(socket.getInputStream());
             this.dataOutputStream = new DataOutputStream(socket.getOutputStream());
-            new Thread(() -> {
+            myServer.getExecutorService().execute(() -> {
                 try {
                     authentication();
                     readMessage();
@@ -33,7 +33,7 @@ public class ClientHandler {
                         closeConnection();
                     }
                 }
-            }).start();
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
