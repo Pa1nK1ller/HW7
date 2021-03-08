@@ -8,6 +8,10 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 public class ClientHandler {
 
     private Socket socket;
@@ -15,8 +19,10 @@ public class ClientHandler {
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
     private String nick;
+    private static final Logger LOG = LogManager.getLogger(ClientHandler.class);
 
     public ClientHandler(MyServer myServer, Socket socket) {
+
         try {
             this.myServer = myServer;
             this.socket = socket;
@@ -69,6 +75,7 @@ public class ClientHandler {
                     myServer.broadcastMessage(broadcastMsg);
                     myServer.subscribe(this);
                     this.nick = nick;
+                    LOG.info("User "+message.getLogin()+ " authentication");
                     return;
                 }
             } catch (SocketException e) {

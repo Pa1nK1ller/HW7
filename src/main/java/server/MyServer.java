@@ -1,5 +1,8 @@
 package server;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -12,13 +15,14 @@ public class MyServer {
     public static final int PORT = 8081;
 
     private List<ClientHandler> clients;
-    private AuthService authService = new DBAuthService();
-    private ExecutorService executorService;
-
+    private final AuthService authService = new DBAuthService();
+    private final ExecutorService executorService;
+    private static final Logger LOG = LogManager.getLogger(MyServer.class);
     public MyServer() {
         executorService = Executors.newCachedThreadPool();
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             DataBase.connect();
+            LOG.info("DataBase connected");
             authService.start();
             clients = new ArrayList<>();
             while (true) {
@@ -32,6 +36,7 @@ public class MyServer {
             e.printStackTrace();
         } finally {
             DataBase.disconnect();
+            LOG.info("DataBase disconnected");
             if (authService != null) {
                 authService.stop();
             }
