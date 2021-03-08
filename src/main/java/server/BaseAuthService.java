@@ -5,15 +5,15 @@ import java.util.List;
 
 public class BaseAuthService implements AuthService {
 
-    private List<Entry> entries;;
+    private List<Entry> entries;
 
-    public BaseAuthService(){
-        entries = new ArrayList<>();
-        entries.add(new Entry("Ivan","password","Neivanov"));
-        entries.add(new Entry("sharik","gav","Auf"));
-        entries.add(new Entry("otvertka","shurup","Kruchu-Verchu"));
+/*    public BaseAuthService() {
+        this.entries = new ArrayList<>();
+        for (int i = 0; i <=10 ; i++) {
+            entries.add(new Entry("login"+i,"pass"+i,"nick"+i));
+        }
 
-    }
+    }*/
 
     private class Entry {
         private String login;
@@ -42,12 +42,17 @@ public class BaseAuthService implements AuthService {
     @Override
     public String getNickByLoginAndPass(String login, String password) {
 
-        for (Entry entry:entries) {
-            if (login.equals(entry.login)&&password.equals(entry.password))
-            {
+/*        return DataBase.getUserNickname(login,password);
+        for (Entry entry : entries) {
+            if (login.equals(entry.login) && password.equals(entry.password)) {
                 return entry.nick;
             }
-        }
+        }*/
         return null;
+    }
+
+    @Override
+    public boolean changeNickname(String currentNickname, String newNickname) {
+        return false;
     }
 }
